@@ -40,7 +40,16 @@ nhsys=/data/local/nhsystem
 # remove chroot.  So stop here if removed or else
 # chroot is never uninstalled.
 
+###### SYSFILE CREATION #######
+#
+# Responsible for creating files which are not found in Android, 
+# but are needed in Kali.
 
+if [ ! -e "/dev/stdin" -o ! -e "/dev/stdout" -o ! -e "/dev/stderr" ]; then
+	[ -e "/dev/stdin" ] || ln -s /proc/self/fd/0 /dev/stdin
+	[ -e "/dev/stdout" ] || ln -s /proc/self/fd/1 /dev/stdout
+	[ -e "/dev/stderr" ] || ln -s /proc/self/fd/2 /dev/stderr
+fi
 
 ######### MOUNT #########
 
@@ -165,7 +174,7 @@ mount_kali_chroot() {
     $busybox mount -t tmpfs tmpfs $mnt/dev/shm
     $busybox mount -t proc proc $mnt/proc
     $busybox mount -t sysfs sysfs $mnt/sys
-
+    
     $busybox chmod 666 /dev/null
 
     # SET 250MB TO ALLOW POSTGRESQL #
